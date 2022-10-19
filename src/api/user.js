@@ -29,3 +29,19 @@ export function getUserProfileAPI() {
     method: 'post'
   })
 }
+
+// 获取用户基本信息
+export function getProfileAPI() {
+  return request({
+    url: '/sys/profile',
+    method: 'post'
+  })
+}
+
+// 获取员工基本信息
+export function getUserPhotoAPI(id) {
+  return request({
+    url: `/sys/user/${id}`, // 把员工id值，带在路径上传给后台
+    method: 'get'
+  })
+}

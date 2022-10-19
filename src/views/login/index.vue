@@ -50,10 +50,6 @@
         <span> password: 123456</span>
       </div>
 
-      <div>
-        <button @click.prevent="testFn">测试</button>
-      </div>
-
     </el-form>
 
   </div>
@@ -111,7 +107,10 @@ export default {
       this.$refs.loginForm.validate(async valid => { // 表单校验
         if (valid) { // 通过 -> 发起登录请求
           try { // 放入可能会报错的代码
-            this.$store.dispatch('user/loginActions', this.loginForm)
+            const res = await this.$store.dispatch('user/loginActions', this.loginForm)
+            // await 等待后面成功后,才继续往下走
+            this.$message.success(res.message)
+            this.$router.replace(this.$route.query.redirect || '/')
           } catch (err) {
             console.dir(err)
           }

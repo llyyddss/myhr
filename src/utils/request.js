@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
 import store from '@/store'
+import router from '@/router'
 
 // create an axios instance
 const service = axios.create({
@@ -34,8 +35,14 @@ service.interceptors.response.use(
     }
   },
   error => {
-    // 4xx的响应状态，如果后台返回了响应数据，就用一下,如果没有，就error对象本身message的值
+    // 4xx/5xx的响应状态，如果后台返回了响应数据，就用一下,如果没有，就error对象本身message的值
     Message.error((error.response && error.response.data && error.response.data.message) || error.message)
+    if (error?.response?.data?.code === 10002) {
+      // token过期
+      store.dispatch('user/logoutActions')
+      // 返回登录页面(也要把被动退出时，所在页面的路由地址字符串传递给登录页面)
+      router.replace(`/login?redirect=${router.currentRoute.fullPath}`)
+    }
     return Promise.reject(error)
   }
 )
